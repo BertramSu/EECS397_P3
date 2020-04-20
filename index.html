@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Pantry Meals</title>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    </head>
+<body>        
+    
+    <!--Button for recipe upload-->
+    <a href="uploadform" class="upform">Upload Recipe</a>
+
+<form action="action_page.php" method="post"><!--Change /action_page.php to whatever phan gives -->
+
+    <div class="wrapper">
+        <!--Search bar-->
+        <input type="text" id="items" name="name" class="input" placeholder="What's in your fridge?">
+        
+        <!--The offset square-->
+        <select id="offset" name="offset" class="offdrop" placeholder="Offset">
+            <option value="offset">Offset</option>
+            <option value="one">1</option>
+            <option value="two">2</option>
+            <option value="three">3</option>
+            <option value="four">4</option>
+            <option value="five">5</option>
+        </select> <br>
+
+        <button type="submit" value="Submit" class="searchbtn">Submit</button>
+    </div>
+    
+</form>
+
+</body>
+</html>
+<!----<div class="searchbtn"><i class="fas fa-search"></i></div> -->
