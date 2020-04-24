@@ -1,8 +1,15 @@
 <html>
 <body>
+ 
 
-Welcome <?php echo $_POST["items"]; ?><br>
-Your email address is: <?php echo $_POST["offset"]; ?>
+<?php 
+
+    $stuff = $_POST["items"];
+    $offset = $_POST["offset"];
+    echo "Your items are: ".$stuff;
+    echo "<br>";
+    echo "Your email address is: ".$offset; 
+?>
 
 </body>
 </html>
