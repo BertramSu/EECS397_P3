@@ -6,30 +6,30 @@
         <link rel="stylesheet" href="styles.css">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
     </head>
-<body>        
-    
+<body>
+
     <!--Button for recipe upload-->
     <a href="upload.html" class="upform">Upload Recipe</a>
 
-<form action="action_page.php" method="post"><!--Change /action_page.php to whatever phan gives -->
+<form action="recipe_search.php" method="get"><!--Change /action_page.php to whatever phan gives -->
 
     <div class="wrapper">
         <!--Search bar-->
         <input type="text" id="items" name="items" class="input" placeholder="What's in your fridge?">
-        
+
         <!--The offset square-->
         <select id="offset" name="offset" class="offdrop" placeholder="Offset">
-            <option value="offset">Offset</option>
-            <option value="one">1</option>
-            <option value="two">2</option>
-            <option value="three">3</option>
-            <option value="four">4</option>
-            <option value="five">5</option>
+            <option value="0">None</option>
+            <option value="1">one</option>
+            <option value="2">two</option>
+            <option value="3">three</option>
+            <option value="4">four</option>
+            <option value="5">five</option>
         </select> <br>
 
         <button type="submit" value="Submit" class="searchbtn">Submit</button>
     </div>
-    
+
 </form>
 
 </body>
