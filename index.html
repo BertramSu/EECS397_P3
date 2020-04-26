@@ -11,11 +11,11 @@
     <!--Button for recipe upload-->
     <a href="upload.html" class="upform">Upload Recipe</a>
 
-<form action="recipe_search.php" method="get"><!--Change /action_page.php to whatever phan gives -->
+<form action="recipe_search.php" method="get" onsubmit="return allLetter(items);"><!--Change /action_page.php to whatever phan gives -->
 
     <div class="wrapper">
         <!--Search bar-->
-        <input type="text" id="items" name="items" class="input" placeholder="What's in your fridge?">
+        <input type="text" id="items" name="items" class="input" placeholder="What's in your fridge? (milk, eggs, etc)">
 
         <!--The offset square-->
         <select id="offset" name="offset" class="offdrop" placeholder="Offset">
@@ -33,5 +33,21 @@
 </form>
 
 </body>
+
+<script type="text/javascript">
+    function allLetter(inputtxt)
+      { 
+      var letters = /^[A-Za-z , ]+$/;
+      if(inputtxt.value.match(letters))
+      {
+       return true;
+      }
+      else
+      {
+        alert('Please input alphabet characters and commas only');
+        return false;
+      }
+      }
+</script>
 </html>
 <!----<div class="searchbtn"><i class="fas fa-search"></i></div> -->
