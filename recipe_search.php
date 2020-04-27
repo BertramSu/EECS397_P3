@@ -33,9 +33,11 @@
 		}
 		else{
 			echo '<h1 class="text-info">Here\'s what we found :))</h1>';
+			echo "<div class=\"d-flex flex-wrap\">";
 			foreach($matching_recipes as $recipe){
 				display_recipe($recipe);
 			}
+			echo "</div>";
 		}
 
 		function recipe_image_source($recipe){
