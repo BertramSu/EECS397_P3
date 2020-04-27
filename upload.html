@@ -20,17 +20,23 @@
             height: 70%;
         }
     </style>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 
 <body>  
     <div class="container-fluid">
     
-        <h1 class="text-info"> Share your recipe!</h1>  
+        <h2 class="text-info"> Share your recipe!</h2>  
 
         <div class="row">
             <div class="col-md-6">    
         
-                <form action="upload_recipe.php" method="POST">
+                <form id="recipe-form" method="POST">
 
                     <div class="form-group">
                         <label for="name">Name of Recipe</label>
@@ -39,7 +45,7 @@
 
                     <div id="ingredientsDiv" class="form-group">
                         <label for="ingredients">Ingredients and Quantity</label>
-                        <br><input type="text" name="ingredients[0]">
+                        <br><input type="text" name="ingredients[0]" required>
                     </div>
                     <input type="button" class="btn btn-light" value="Add ingredient" onClick="addInput('ingredientsDiv');">
 
@@ -63,6 +69,9 @@
                         <input type="number" class="form-control" name="calories" id="calories">
                     </div>
 
+                    <!--CAPTCH-->
+                    <div class="g-recaptcha" data-sitekey="6LeJxu4UAAAAANrgmXzwTVhwDV_I7K9V0T3OvXHZ"></div>
+
                     <p><input class="btn btn-primary btn-rounded" type="submit" value="Share recipe!" />
                 </form>
 
@@ -77,6 +86,32 @@
         </div>
 
     <script>
+        $(document).ready(function() {
+
+            $('#recipe-form').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: 'upload_recipe.php',
+                    data: $(this).serialize(),
+                    success: function(response)
+                    {
+                        var jsonData = JSON.parse(response);
+                        if (jsonData.success == "1")
+                        {
+                            $('#recipe-form')[0].reset();
+                            grecaptcha.reset();
+                            alert('Recipe submitted successfully!');
+                        }
+                        else
+                        {
+                            alert('CAPTCHA failed');
+                        }
+                   }
+               });
+             });
+        });
+
         var counter = 1;
 
         function addInput(divName){
@@ -94,11 +129,6 @@
         }
 
     </script>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
+    
 </body>
 </html>

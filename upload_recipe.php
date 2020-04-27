@@ -1,12 +1,16 @@
 <?php 
 
-echo $_POST["recipe_name"];
-echo " submitted succesfully";
-
+validateCAPTCHA();
 $current_data = file_get_contents('db-recipes.json');
-$array_data = json_decode($current_data, true);
-$array_data[] = recipeArray();
-file_put_contents('test.json', json_encode($array_data));
+$data_array = json_decode($current_data, true);
+$data_array[] = recipeArray();
+file_put_contents('test.json', json_encode($data_array));
+
+# Server response
+echo json_encode(array('success' => 1));
+
+
+## HELPER FUNCTIONS 
 
 function recipeArray(){
 	return array(
@@ -25,16 +29,36 @@ function ingredientsArray(){
 	$ingredients_array = [];
 
 	foreach ($ingredients as $ingredient) {
-
 		if (!empty($ingredient)){
 			array_push($ingredients_array, $ingredient);
 		}
-
 	}
 
 	return $ingredients_array;
 }
 
+function validateCAPTCHA(){
+
+	if (isset($_POST['g-recaptcha-response']) ){
+		$captcha=$_POST['g-recaptcha-response'];
+    }
+
+    if (!$captcha){
+        echo json_encode(array('success' => 0));
+        exit;
+    }
+
+    $secretKey = "6LeJxu4UAAAAAE14zNWcMKI0SM0LGGJeAx_Xbb0q";
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . urlencode($secretKey) .  '&response=' . urlencode($captcha);
+    $response = file_get_contents($url);
+    $responseKeys = json_decode($response, true);
+
+    if (!$responseKeys["success"]) {
+        echo json_encode(array('success' => 0));
+        exit;
+    }
+}
 
 ?>
 
