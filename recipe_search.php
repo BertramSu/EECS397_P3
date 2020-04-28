@@ -76,14 +76,21 @@
 			$items = preg_replace('/[^a-z0-9]+$/i', '', $_GET['items']);
 			$keywords = preg_split("/[\s,]+/", $items);
 			$matching_recipes = array();
+			$match_counts = array();
 			foreach($recipes as $id => $recipe){
 				$ingridients = $recipe['ingredients'];
 				$match = matches($ingridients, $keywords);
 				// assuming partial match, if want full match then we should use match == |keywords| 
 				// instead of match in (0, |keywords|]
 				if(0 < $match and $match <= count($keywords) and abs(count($ingridients) - count($keywords)) <= $offset){
-					$matching_recipes[$id] = $recipe;
+					$match_counts[$id] = $match;
 				}
+			}
+			arsort($match_counts);
+			foreach($match_counts as $id => $matches){
+				// assuming partial match, if want full match then we should use match == |keywords| 
+				// instead of match in (0, |keywords|]
+				$matching_recipes[$id] = $recipes[$id];
 			}
 			return $matching_recipes;
 		}
@@ -97,7 +104,7 @@
 			$matched_keywords = array();
 			foreach($ingridients as $ingredient){
 				foreach($keywords as $keyword){
-					if(!$matched_keywords[$keyword] and preg_match('/\b'.$keyword.'\b/i', $ingredient)){
+					if(!array_key_exists($keyword, $matched_keywords) and preg_match('/\b'.$keyword.'\b/i', $ingredient)){
 						$matched_keywords[$keyword] = TRUE;
 						$match++;
 						// breaking due to we only need to match one ingredient
