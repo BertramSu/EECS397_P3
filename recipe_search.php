@@ -34,8 +34,12 @@
 		else{
 			echo '<h1 class="text-info">Here\'s what we found :))</h1>';
 			echo "<div class=\"d-flex flex-wrap\">";
+			$resDspld = 0;
 			foreach($matching_recipes as $recipe){
-				display_recipe($recipe);
+				if($resDspld < 10){
+					display_recipe($recipe);
+					$resDspld++;
+				}
 			}
 			echo "</div>";
 		}
