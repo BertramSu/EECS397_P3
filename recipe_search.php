@@ -45,42 +45,46 @@
 		}
 
 		function recipe_image_source($recipe){
-      $google_api_info = json_decode(file_get_contents('googleapi.json'), true);
-      $API_KEY = $google_api_info["API_KEY"];
-      $GOOGLE_CX = $google_api_info["GOOGLE_CX"];
-      $query = str_replace(' ','+',$recipe['name']);
-      $json = file_get_contents('https://www.googleapis.com/customsearch/v1?q='.$query.'&key='.$API_KEY."&cx=".$GOOGLE_CX.'&searchType=image');
-      $data = json_decode($json, true);
-      $result_image_source = $data['items'][0]['link'];
-      echo '<img class="card-img-top" src="'.$result_image_source.'">';
-    }
+			$google_api_info = json_decode(file_get_contents('googleapi.json'), true);
+			$API_KEY = $google_api_info["API_KEY"];
+			$GOOGLE_CX = $google_api_info["GOOGLE_CX"];
+			$query = str_replace(' ','+',$recipe['name']);
+			$json = file_get_contents('https://www.googleapis.com/customsearch/v1?q='.$query.'&key='.$API_KEY."&cx=".$GOOGLE_CX.'&searchType=image');
+			$data = json_decode($json, true);
+			$result_image_source = $data['items'][0]['link'];
+			return $result_image_source;
+		}
 
 		function display_recipe($recipe){
-				echo '<div class="card" style="width: 18rem;">';
-				recipe_image_source($recipe);
-				echo '<div class="card-body">';
-				echo '<h5 class="card-title">'.$recipe["name"].'</h5>';
-				echo '<p class="card-text">'.$recipe["source"].'</p>';
-				echo '<form action="view_recipe.php"  method="post" id="view-recipe">';
-				echo '<input type="hidden" id="recipe_id" name="recipe_id" value='.$recipe['id'].'>';
-				echo '<input type="submit" class="btn btn-primary" value="See more">';
-				echo '</form>';
-				echo '</div>';
-				echo '</div>';
+			echo '<div class="card" style="width: 18rem;">';
+			$image_source = recipe_image_source($recipe);
+			echo '<img class="card-img-top" src="'.$image_source.'">';
+			echo '<div class="card-body">';
+			echo '<h5 class="card-title">'.$recipe["name"].'</h5>';
+			echo '<p class="card-text">'.$recipe["source"].'</p>';
+			echo '<form action="view_recipe.php"  method="post" id="view-recipe">';
+			echo '<input type="hidden" id="recipe_id" name="recipe_id" value='.$recipe['id'].'>';
+			echo '<input type="hidden" id="recipe_id" name="img_src" value='.$image_source.'>';
+			echo '<input type="submit" class="btn btn-primary" value="See more">';
+			echo '</form>';
+			echo '</div>';
+			echo '</div>';
 		}
 
 		function matching_recipes($recipes){
 			$offset = $_GET['offset'];
-			$items = $_GET['items'];
+			$items = preg_replace('/[^a-z0-9]+$/i', '', $_GET['items']);
+			$keywords = preg_split("/[\s,]+/", $items);
 			$matching_recipes = array();
 			foreach($recipes as $id => $recipe){
-		  	$ingridients = $recipe['ingredients'];
-				$keywords = preg_split("/[\s,]+/", $items);
+				$ingridients = $recipe['ingredients'];
 				$match = matches($ingridients, $keywords);
-				if(abs($match - count($keywords)) < $offset and $match > 0){
+				// assuming partial match, if want full match then we should use match == |keywords| 
+				// instead of match in (0, |keywords|]
+				if(0 < $match and $match <= count($keywords) and abs(count($ingridients) - count($keywords)) <= $offset){
 					$matching_recipes[$id] = $recipe;
 				}
-		  }
+			}
 			return $matching_recipes;
 		}
 
@@ -90,17 +94,14 @@
 
 		function matches($ingridients, $keywords){
 			$match = 0;
+			$matched_keywords = array();
 			foreach($ingridients as $ingredient){
 				foreach($keywords as $keyword){
-					// print('ing<br>');
-					// print($ingredient);
-					// print('<br>');
-					// print('key<br>');
-					// print($keyword);
-				  // print('<br>');
-					if(preg_match('/\b'.$keyword.'\b/i', $ingredient)){
-						// print($ingredient);
+					if(!$matched_keywords[$keyword] and preg_match('/\b'.$keyword.'\b/i', $ingredient)){
+						$matched_keywords[$keyword] = TRUE;
 						$match++;
+						// breaking due to we only need to match one ingredient
+						break;
 					}
 				}
 			}

@@ -14,20 +14,21 @@
 
 <?php
     $id = $_POST["recipe_id"];
+    $image_source = $_POST["img_src"];
     $current_data = file_get_contents('db-recipes.json');
 		$recipes = json_decode($current_data, true);
     $recipe = $recipes[$id];
 
-    function recipe_image_source($recipe){
-      $google_api_info = json_decode(file_get_contents('googleapi.json'), true);
-      $API_KEY = $google_api_info["API_KEY"];
-      $GOOGLE_CX = $google_api_info["GOOGLE_CX"];
-      $query = str_replace(' ','+',$recipe['name']);
-      $json = file_get_contents('https://www.googleapis.com/customsearch/v1?q='.$query.'&key='.$API_KEY."&cx=".$GOOGLE_CX.'&searchType=image');
-      $data = json_decode($json, true);
-      $result_image_source = $data['items'][0]['link'];
-      echo '<img src="'.$result_image_source.'">';
-    }
+    // function recipe_image_source($recipe){
+    //   $google_api_info = json_decode(file_get_contents('googleapi.json'), true);
+    //   $API_KEY = $google_api_info["API_KEY"];
+    //   $GOOGLE_CX = $google_api_info["GOOGLE_CX"];
+    //   $query = str_replace(' ','+',$recipe['name']);
+    //   $json = file_get_contents('https://www.googleapis.com/customsearch/v1?q='.$query.'&key='.$API_KEY."&cx=".$GOOGLE_CX.'&searchType=image');
+    //   $data = json_decode($json, true);
+    //   $result_image_source = $data['items'][0]['link'];
+    //   echo '<img src="'.$result_image_source.'">';
+    // }
 ?>
 <main role="main" class="container">
       <div class="row">
@@ -37,7 +38,7 @@
           </div><!-- /.blog-post -->
           <div id='container' class="blog-post-title">
             <?php
-              recipe_image_source($recipe);
+              echo '<img src="'.$image_source.'">';
             ?>
           </div>
           <div class="blog-post">
