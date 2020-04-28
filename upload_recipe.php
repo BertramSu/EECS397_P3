@@ -1,10 +1,11 @@
 <?php 
 
 validateCAPTCHA();
-$current_data = file_get_contents('db-recipes.json');
+$recipes_db = 'db-recipes.json';
+$current_data = file_get_contents($recipes_db);
 $data_array = json_decode($current_data, true);
 $data_array[] = recipeArray();
-file_put_contents('test.json', json_encode($data_array));
+file_put_contents($recipes_db, json_encode($data_array));
 
 # Server response
 echo json_encode(array('success' => 1));
